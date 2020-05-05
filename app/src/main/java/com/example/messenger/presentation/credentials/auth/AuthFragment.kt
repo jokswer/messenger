@@ -1,40 +1,50 @@
 package com.example.messenger.presentation.credentials.auth
 
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.messenger.App
 import com.example.messenger.R
+import com.example.messenger.base.ABaseFragment
 import com.example.messenger.presentation.credentials.ICredentialsActivity
-import com.example.messenger.presentation.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_auth.*
+import javax.inject.Inject
 
-class AuthFragment : Fragment() {
+class AuthFragment : ABaseFragment(), IAuthView {
 
-//    abstract fun getViewId(): Int
+    @Inject
+    @InjectPresenter
+    lateinit var presenter: AuthPresenter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_auth, container, false)
+    @ProvidePresenter
+    fun providerPresenter() = presenter
+
+    override fun inject() {
+        App.appComponent.inject(this)
     }
+
+    override fun getViewId(): Int = R.layout.fragment_auth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnRegistration.setOnClickListener {
+        btnOnRegistration.setOnClickListener {
             activity.let {
                 if (it is ICredentialsActivity) it.showRegistration()
             }
         }
 
-        btnLogin.setOnClickListener {
-            MainActivity.show()
+        btnAuth.setOnClickListener {
+            val login = "${tiLogin.text}"
+            val password = "${tiPassword.text}"
+
+            if (login.isEmpty() || password.isEmpty()) {
+                toast(R.string.loginOrPasswordEmptyError)
+                return@setOnClickListener
+            }
+
+            presenter.auth(login,password)
         }
 
     }

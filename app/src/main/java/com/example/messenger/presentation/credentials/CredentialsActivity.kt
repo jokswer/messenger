@@ -13,6 +13,8 @@ class CredentialsActivity : ABaseActivity(), ICredentialsActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.container)
 
+        if (savedInstanceState != null) return
+
         showAuth()
     }
 
@@ -21,7 +23,7 @@ class CredentialsActivity : ABaseActivity(), ICredentialsActivity {
     }
 
     override fun showRegistration() {
-        replace(RegistrationFragment())
+        replace(RegistrationFragment(), "Registration")
     }
 
 //    override fun showLoading() {
