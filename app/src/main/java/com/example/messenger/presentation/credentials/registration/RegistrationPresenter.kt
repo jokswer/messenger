@@ -1,20 +1,34 @@
 package com.example.messenger.presentation.credentials.registration
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.example.messenger.base.SubRX
+import com.example.messenger.domain.repositories.UserRepository
 import com.example.messenger.presentation.main.MainActivity
 import javax.inject.Inject
 
 @InjectViewState
 class RegistrationPresenter: MvpPresenter<IRegistrationView> {
 
-    @Inject
-    constructor(){
+    private var userRepository: UserRepository
 
+    @Inject
+    constructor(userRepository: UserRepository){
+        this.userRepository = userRepository
     }
 
     fun login(login: String, password: String){
 
-        MainActivity.show()
+        userRepository.registration(SubRX { _, e ->
+            Log.i("TEST", "$e, e")
+            if (e != null) {
+                e.printStackTrace()
+                return@SubRX
+            }
+
+            MainActivity.show()
+
+        }, login, password)
     }
 }
