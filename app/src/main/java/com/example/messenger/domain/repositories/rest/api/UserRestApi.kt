@@ -1,6 +1,5 @@
 package com.example.messenger.domain.repositories.rest.api
 
-import android.util.Log
 import com.example.messenger.base.ABaseRestApi
 import com.example.messenger.base.IRestClient
 import com.example.messenger.domain.di.modules.NetModule

@@ -21,8 +21,9 @@ class RegistrationPresenter: MvpPresenter<IRegistrationView> {
     fun login(login: String, password: String){
 
         userRepository.registration(SubRX { _, e ->
-            Log.i("TEST", "$e, e")
+
             if (e != null) {
+                viewState.onError(e.localizedMessage)
                 e.printStackTrace()
                 return@SubRX
             }

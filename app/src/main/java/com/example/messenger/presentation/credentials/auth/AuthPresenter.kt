@@ -20,6 +20,7 @@ class AuthPresenter: MvpPresenter<IAuthView> {
     fun auth(login: String, password: String) {
         userRepository.login(SubRX { _, e ->
             if (e != null) {
+                viewState.onError(e.localizedMessage)
                 e.printStackTrace()
                 return@SubRX
             }

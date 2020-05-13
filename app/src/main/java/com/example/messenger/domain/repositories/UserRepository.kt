@@ -19,10 +19,11 @@ class UserRepository {
     fun login(observer: SubRX<User>, login: String, password: String) {
         rest.login(login, password)
 //            .doOnNext { storage.save(it) }
-//            .standardSubscribeIO(observer)
+            .standardSubscribeIO(observer)
     }
 
     fun registration(observer: SubRX<User>, login: String, pass: String) {
-        rest.registration(login, pass).standardSubscribeIO(observer)
+        rest.registration(login, pass)
+            .standardSubscribeIO(observer)
     }
 }

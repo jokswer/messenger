@@ -47,6 +47,9 @@ class RegistrationFragment : ABaseFragment(), IRegistrationView {
             presenter.login(login,password)
         }
 
+    }
 
+    override fun onError(message: String?) {
+        message?.let { toast(it) }
     }
 }
