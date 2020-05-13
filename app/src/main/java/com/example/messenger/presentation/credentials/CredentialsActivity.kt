@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.example.messenger.R
 import com.example.messenger.base.ABaseActivity
 import com.example.messenger.presentation.credentials.auth.AuthFragment
+import com.example.messenger.presentation.credentials.loading.LoadingFragment
 import com.example.messenger.presentation.credentials.registration.RegistrationFragment
 
 
@@ -15,7 +16,7 @@ class CredentialsActivity : ABaseActivity(), ICredentialsActivity {
 
         if (savedInstanceState != null) return
 
-        showAuth()
+        showLoading()
     }
 
     override fun showAuth() {
@@ -26,8 +27,8 @@ class CredentialsActivity : ABaseActivity(), ICredentialsActivity {
         replace(RegistrationFragment(), "Registration")
     }
 
-//    override fun showLoading() {
-//        replace()
-//    }
+    override fun showLoading() {
+        replace(LoadingFragment())
+    }
 
 }

@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.arellomobile.mvp.MvpAppCompatFragment
 
-abstract class ABaseFragment: MvpAppCompatFragment() {
+abstract class ABaseFragment: MvpAppCompatFragment(), IBaseView {
 
     init {
         inject()
