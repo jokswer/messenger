@@ -2,10 +2,12 @@ package com.example.messenger.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.GravityCompat
 import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseActivity
 import com.example.messenger.presentation.main.messages.MessagesFragment
+import kotlinx.android.synthetic.main.fragment_messages.*
 
 class MainActivity : ABaseActivity(), IMainActivity {
 
@@ -23,10 +25,17 @@ class MainActivity : ABaseActivity(), IMainActivity {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.container)
 
+        if (savedInstanceState != null) return
+
         showMessages()
     }
 
     override fun showMessages() {
         replace(MessagesFragment())
+    }
+
+    override fun onBackPressed() {
+        if (navigation.isDrawerOpen(GravityCompat.START)) navigation.closeDrawer(GravityCompat.START)
+        else super.onBackPressed()
     }
 }

@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".presentation.main.MainActivity"
     android:fitsSystemWindows="true">
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
@@ -22,8 +23,25 @@
                 app:titleTextColor="@color/colorWhite"
                 app:navigationIcon="@drawable/ic_menu_black_24dp"/>
         </com.google.android.material.appbar.AppBarLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dsdsd"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dsdsd"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dsdsd"/>
+        </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nvDrawer"
@@ -31,6 +49,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/colorWhite">
+        <include layout="@layout/drawer"/>
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

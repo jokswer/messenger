@@ -8,6 +8,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseFragment
+import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.fragment_messages.*
 import javax.inject.Inject
 
@@ -31,6 +32,10 @@ class MessagesFragment : ABaseFragment(), IMessagesView {
 
         topAppBar.setNavigationOnClickListener {
             navigation.openDrawer(Gravity.LEFT)
+        }
+
+        btnLogout.setOnClickListener{
+            presenter.logout()
         }
     }
 
