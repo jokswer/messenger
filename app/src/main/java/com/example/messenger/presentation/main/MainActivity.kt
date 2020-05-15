@@ -5,8 +5,9 @@ import android.os.Bundle
 import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseActivity
+import com.example.messenger.presentation.main.messages.MessagesFragment
 
-class MainActivity : ABaseActivity() {
+class MainActivity : ABaseActivity(), IMainActivity {
 
     companion object {
         fun show(){
@@ -20,6 +21,12 @@ class MainActivity : ABaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.container)
+
+        showMessages()
+    }
+
+    override fun showMessages() {
+        replace(MessagesFragment())
     }
 }
