@@ -35,7 +35,7 @@ class MainActivity : ABaseActivity(), IMainActivity {
     }
 
     override fun onBackPressed() {
-        if (navigation.isDrawerOpen(GravityCompat.START)) navigation.closeDrawer(GravityCompat.START)
+        if (dlMessages.isDrawerOpen(GravityCompat.START)) dlMessages.closeDrawer(GravityCompat.START)
         else super.onBackPressed()
     }
 }
