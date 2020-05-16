@@ -31,6 +31,11 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view: View = MessageView(parent.context)
 
+            view.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
             return object: RecyclerView.ViewHolder(view) { }
         }
 
@@ -69,12 +74,14 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         btnLogout.setOnClickListener{
             presenter.logout()
         }
+
+        adapter.data = this.messages.toMutableList()
     }
 
     override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
 
     override fun bindMessages(messages: List<Message>) {
-        adapter.data = this.messages.toMutableList()
+        adapter.data = messages.toMutableList()
     }
 
     override fun onError(message: String?) {
