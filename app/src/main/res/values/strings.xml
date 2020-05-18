@@ -3,4 +3,5 @@
     <string name="title_activity_credentials">CredentialsActivity</string>
     <string name="loginOrPasswordEmptyError">Введите пароль или имя</string>
     <string name="logout">Выйти</string>
+    <string name="avatar">avatar</string>
 </resources>

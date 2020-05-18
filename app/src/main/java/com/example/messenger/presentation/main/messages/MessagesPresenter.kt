@@ -20,4 +20,6 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
         userRepository.logout()
         CredentialsActivity.show()
     }
+
+    fun getUserInfo() = userRepository.getUser()
 }

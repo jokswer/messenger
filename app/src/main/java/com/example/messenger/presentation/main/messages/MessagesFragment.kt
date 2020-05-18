@@ -1,7 +1,6 @@
 package com.example.messenger.presentation.main.messages
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import com.example.messenger.R
 import com.example.messenger.base.ABaseAdapter
 import com.example.messenger.base.ABaseListFragment
 import com.example.messenger.domain.repositories.models.rest.Message
+import com.example.messenger.domain.repositories.models.rest.User
 import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.fragment_messages.*
 import javax.inject.Inject
@@ -75,6 +75,8 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
             presenter.logout()
         }
 
+        bindUserInfo(presenter.getUserInfo())
+
         adapter.data = this.messages.toMutableList()
     }
 
@@ -82,6 +84,10 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
     override fun bindMessages(messages: List<Message>) {
         adapter.data = messages.toMutableList()
+    }
+
+    override fun bindUserInfo(user: User?) {
+        tvName.text = user?.login
     }
 
     override fun onError(message: String?) {
