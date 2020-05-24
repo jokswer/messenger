@@ -1,9 +1,12 @@
 package com.example.messenger.presentation.main.messages
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -15,9 +18,19 @@ import com.example.messenger.domain.repositories.models.rest.Message
 import com.example.messenger.domain.repositories.models.rest.User
 import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.fragment_messages.*
+import java.io.File
+import java.io.InputStream
 import javax.inject.Inject
 
+
 class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), IMessagesView {
+
+    private val REQUEST_ACCESS_READ_EXTERNAL_STORAGE = 111
+    private val REQUEST_CODE_GALLERY = 100
+
+    private var cacheFile: File? = null
+    private var imagePath: String? = null
+    private var imageStream: InputStream? = null
 
     private val messages = listOf(
         Message("12.12.12", true, 1, 22, "Hello", 2),
@@ -26,27 +39,6 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         Message("12.12.12", true, 1, 25, "Hello", 2),
         Message("12.12.12", true, 1, 26, "Hello", 2)
     )
-
-    class Adapter: ABaseAdapter<Message, RecyclerView.ViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            val view: View = MessageView(parent.context)
-
-            view.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-
-            return object: RecyclerView.ViewHolder(view) { }
-        }
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            val view = holder.itemView
-
-            if (view is IMessageView) {
-                view.bind(data[position])
-            }
-        }
-    }
 
     @Inject
     @InjectPresenter
@@ -62,7 +54,7 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     override fun getViewId(): Int = R.layout.fragment_messages
     override fun getListId(): Int = R.id.rvMessagesList
 
-    private val adapter = Adapter()
+    private val adapter = MessagesAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,6 +65,10 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
         btnLogout.setOnClickListener{
             presenter.logout()
+        }
+
+        ivAvatar.setOnClickListener {
+            openGallery()
         }
 
         bindUserInfo(presenter.getUserInfo())
@@ -94,4 +90,24 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         TODO("Not yet implemented")
     }
 
+    private fun openGallery(){
+        val intent = Intent(Intent.ACTION_PICK).apply { type = "image/" }
+        startActivityForResult(intent, REQUEST_CODE_GALLERY)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data == null) return
+
+        when(requestCode){
+            REQUEST_CODE_GALLERY -> {
+
+                val selectedImage = data.data?.path
+                val bitmap = BitmapFactory.decodeFile(selectedImage)
+                Log.i("tag", bitmap.toString())
+                ivAvatar.setImageBitmap(bitmap)
+            }
+        }
+    }
 }

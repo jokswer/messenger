@@ -13,8 +13,10 @@
         android:orientation="vertical"
         android:paddingBottom="10dp">
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/ivAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
             android:layout_marginTop="35dp"
             android:layout_marginStart="20sp"
             android:src="@drawable/ic_person_add_black_24dp"
