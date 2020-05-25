@@ -1,12 +1,17 @@
 package com.example.messenger.presentation.main.messages
 
+import android.app.Activity
+import android.Manifest
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -14,19 +19,22 @@ import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseAdapter
 import com.example.messenger.base.ABaseListFragment
+import com.example.messenger.base.Utils
 import com.example.messenger.domain.repositories.models.rest.Message
 import com.example.messenger.domain.repositories.models.rest.User
 import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.fragment_messages.*
 import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
+import java.util.*
 import javax.inject.Inject
 
 
 class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), IMessagesView {
 
-    private val REQUEST_ACCESS_READ_EXTERNAL_STORAGE = 111
     private val REQUEST_CODE_GALLERY = 100
+    private val REQUEST_PERMISSION = 101
 
     private var cacheFile: File? = null
     private var imagePath: String? = null
@@ -54,8 +62,6 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     override fun getViewId(): Int = R.layout.fragment_messages
     override fun getListId(): Int = R.id.rvMessagesList
 
-    private val adapter = MessagesAdapter()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -76,11 +82,70 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         adapter.data = this.messages.toMutableList()
     }
 
-    override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    override fun bindMessages(messages: List<Message>) {
-        adapter.data = messages.toMutableList()
+        if (data == null) return
+        val provider = this.activity
+
+        when(requestCode){
+            REQUEST_CODE_GALLERY -> {
+                if (resultCode == Activity.RESULT_OK){
+
+                    val selectedImage = data.data
+                    imagePath = getRealPathFromURI(selectedImage, provider)
+                    if (imagePath != null || selectedImage != null) {
+                        cacheFile = prepareCache()
+                        var success = imagePath != null
+                        if (!success && selectedImage != null) {
+                            try {
+                                imageStream = provider?.contentResolver?.openInputStream(selectedImage)
+                                success = imageStream != null
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        if (success) {
+                            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+                        }
+                    }
+//                    cacheFile = prepareCache()
+//                    val file = cacheFile
+//
+//                    val bitmap = BitmapFactory.decodeFile(imagePath)
+//
+//                    if (file != null) {
+//
+//                        val sourcePath = file.absolutePath
+//                        Utils.compressImage(sourcePath)
+//
+//                        onSuccess(bitmap, file)
+//                    }
+                }
+            }
+        }
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when(requestCode){
+            REQUEST_PERMISSION -> {
+                val cacheFile = cacheFile
+                if (cacheFile != null && (imagePath != null || imageStream != null)) {
+                    onPrepareImage(cacheFile, imagePath, imageStream)
+                }
+            }
+        }
+    }
+
+    private val adapter = MessagesAdapter()
+    override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
 
     override fun bindUserInfo(user: User?) {
         tvName.text = user?.login
@@ -95,19 +160,53 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         startActivityForResult(intent, REQUEST_CODE_GALLERY)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun prepareCache(): File {
+        return File(Utils.getDraftExternalDir(App.appContext), UUID.randomUUID().toString())
+    }
 
-        if (data == null) return
+    private val projection = arrayOf(MediaStore.Images.Media.DATA)
+    private fun getRealPathFromURI(
+        contentURI: Uri?,
+        activity: FragmentActivity?
+    ): String? {
 
-        when(requestCode){
-            REQUEST_CODE_GALLERY -> {
+        if (contentURI == null)
+            return null
 
-                val selectedImage = data.data?.path
-                val bitmap = BitmapFactory.decodeFile(selectedImage)
-                Log.i("tag", bitmap.toString())
-                ivAvatar.setImageBitmap(bitmap)
-            }
+        activity?.contentResolver?.query(contentURI, projection, null, null, null)?.use {
+            it.moveToFirst()
+            val idx = it.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            return if (idx == -1) null else it.getString(idx)
         }
+
+        return null
+    }
+
+    private fun onPrepareImage(cacheFile: File, imagePath: String?, imageStream: InputStream?) {
+
+        if (imagePath == null && imageStream == null)
+            return
+
+        Thread {
+
+            val copyResult = when {
+                imagePath != null -> Utils.copy(File(imagePath), cacheFile)
+                imageStream != null -> Utils.copy(imageStream, FileOutputStream(cacheFile))
+                else -> return@Thread
+            }
+
+            val sourcePath = cacheFile.absolutePath
+
+            if (copyResult && !sourcePath.isNullOrEmpty()) {
+                Utils.compressImage(sourcePath)
+                val bitmap = BitmapFactory.decodeFile(sourcePath)
+                this.activity?.runOnUiThread { onSuccess(bitmap, cacheFile) }
+            }
+        }.start()
+    }
+
+    private fun onSuccess(bitmap: Bitmap, file: File){
+        ivAvatar.setImageBitmap(bitmap)
+        presenter.uploadAvatar(file)
     }
 }

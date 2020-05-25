@@ -1,5 +1,6 @@
 package com.example.messenger.presentation.main.messages
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.messenger.base.SubRX
@@ -26,8 +27,9 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
     fun getUserInfo() = userRepository.getUser()
 
     fun uploadAvatar(file: File){
+        Log.i("tag", "presenter")
         userRepository.uploadAvatar(SubRX { path, e ->
-
+            Log.i("tag", path.toString())
             e?.let {
                 viewState.onError(it.localizedMessage)
                 it.printStackTrace()

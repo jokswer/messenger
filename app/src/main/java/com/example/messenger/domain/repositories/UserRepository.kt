@@ -7,7 +7,6 @@ import com.example.messenger.domain.repositories.models.rest.UploadedFile
 import com.example.messenger.domain.repositories.models.rest.User
 import com.example.messenger.domain.repositories.rest.api.UserRestApi
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 class UserRepository {
