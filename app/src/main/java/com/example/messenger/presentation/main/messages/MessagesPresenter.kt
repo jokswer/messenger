@@ -27,13 +27,18 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
     fun getUserInfo() = userRepository.getUser()
 
     fun uploadAvatar(file: File){
-        Log.i("tag", "presenter")
+
         userRepository.uploadAvatar(SubRX { path, e ->
-            Log.i("tag", path.toString())
             e?.let {
                 viewState.onError(it.localizedMessage)
+                Log.e("tag", it.message)
                 it.printStackTrace()
                 return@SubRX
+            }
+
+            path?.let {
+                println("Link: $it")
+                viewState.onSuccess(it.path)
             }
 
         }, file)

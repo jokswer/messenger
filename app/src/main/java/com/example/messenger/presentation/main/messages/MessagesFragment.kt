@@ -15,11 +15,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseAdapter
 import com.example.messenger.base.ABaseListFragment
 import com.example.messenger.base.Utils
+import com.example.messenger.domain.di.modules.NetModule
 import com.example.messenger.domain.repositories.models.rest.Message
 import com.example.messenger.domain.repositories.models.rest.User
 import kotlinx.android.synthetic.main.drawer.*
@@ -110,18 +113,19 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
                             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_PERMISSION)
                         }
                     }
-//                    cacheFile = prepareCache()
-//                    val file = cacheFile
-//
-//                    val bitmap = BitmapFactory.decodeFile(imagePath)
-//
-//                    if (file != null) {
-//
-//                        val sourcePath = file.absolutePath
-//                        Utils.compressImage(sourcePath)
-//
-//                        onSuccess(bitmap, file)
-//                    }
+
+                    cacheFile = prepareCache()
+                    val file = cacheFile
+
+                    val bitmap = BitmapFactory.decodeFile(imagePath)
+
+                    if (file != null) {
+
+                        val sourcePath = file.absolutePath
+                        Utils.compressImage(sourcePath)
+
+                        onSuccess(bitmap, file)
+                    }
                 }
             }
         }
@@ -152,7 +156,7 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     }
 
     override fun onError(message: String?) {
-        TODO("Not yet implemented")
+        if (message != null) toast(message)
     }
 
     private fun openGallery(){
@@ -208,5 +212,19 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     private fun onSuccess(bitmap: Bitmap, file: File){
         ivAvatar.setImageBitmap(bitmap)
         presenter.uploadAvatar(file)
+    }
+
+    override fun onSuccess(url: String?) {
+        toast("File uploaded: $url")
+
+        val fullPath = "${NetModule.DOMAIN_MAIN_API}$url"
+        toast("Load image: $fullPath")
+
+        Glide
+            .with(this)
+            .load(fullPath)
+            .placeholder(R.mipmap.ic_launcher_round)
+            .apply(RequestOptions.circleCropTransform())
+            .into(ivAvatar)
     }
 }

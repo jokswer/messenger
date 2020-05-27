@@ -52,4 +52,8 @@ class RegistrationFragment : ABaseFragment(), IRegistrationView {
     override fun onError(message: String?) {
         message?.let { toast(it) }
     }
+
+    override fun onSuccess(message: String?) {
+        TODO("Not yet implemented")
+    }
 }

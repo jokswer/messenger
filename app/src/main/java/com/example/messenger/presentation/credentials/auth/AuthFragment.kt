@@ -52,4 +52,8 @@ class AuthFragment : ABaseFragment(), IAuthView {
     override fun onError(message: String?) {
         message?.let { toast(it) }
     }
+
+    override fun onSuccess(message: String?) {
+        TODO("Not yet implemented")
+    }
 }

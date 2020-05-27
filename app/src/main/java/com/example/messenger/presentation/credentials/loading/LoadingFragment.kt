@@ -34,4 +34,8 @@ class LoadingFragment: ABaseFragment(), ILoadingView {
         TODO("Not yet implemented")
     }
 
+    override fun onSuccess(message: String?) {
+        TODO("Not yet implemented")
+    }
+
 }
