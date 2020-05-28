@@ -44,4 +44,7 @@ class UserRestApi: ABaseRestApi<IUserRestApiService> {
         return service.uploadAvatar(part)
 
     }
+
+    fun refreshToken(refreshToken: String)
+            = service.refreshToken(refreshToken)
 }

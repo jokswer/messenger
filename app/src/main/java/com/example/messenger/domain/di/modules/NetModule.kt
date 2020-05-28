@@ -1,7 +1,9 @@
 package com.example.messenger.domain.di.modules
 
 import com.example.messenger.base.IRestClient
+import com.example.messenger.domain.repositories.UserRepository
 import com.example.messenger.domain.repositories.rest.RestClient
+import com.example.messenger.domain.repositories.rest.TokenInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -25,9 +27,9 @@ class NetModule {
         const val NAME_CLIENT_WITHOUT_TOKEN_INTERCEPTOR = "NAME_CLIENT_WITHOUT_TOKEN_INTERCEPTOR"
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideTokenInterceptor(userRepository: UserRepository) = TokenInterceptor(userRepository)
+    @Provides
+    @Singleton
+    fun provideTokenInterceptor(userRepository: UserRepository) = TokenInterceptor(userRepository)
 
 
     @Provides
@@ -48,17 +50,17 @@ class NetModule {
     }.build()
 
 
-//    @Provides
-//    @Singleton
-//    fun provideOkHttpClientWithTokenInterceptor(logger: Interceptor, token: TokenInterceptor): OkHttpClient {
-//        return OkHttpClient.Builder()
-//            .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
-//            .readTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
-//            .writeTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
-//            .addInterceptor(logger)
-//            .addInterceptor(token)
-//            .build()
-//    }
+    @Provides
+    @Singleton
+    fun provideOkHttpClientWithTokenInterceptor(logger: Interceptor, token: TokenInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
+            .readTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
+            .writeTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
+            .addInterceptor(logger)
+            .addInterceptor(token)
+            .build()
+    }
 
 
     @Provides

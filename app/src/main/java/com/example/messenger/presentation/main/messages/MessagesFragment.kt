@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.fragment.app.FragmentActivity
@@ -81,6 +80,8 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         }
 
         bindUserInfo(presenter.getUserInfo())
+
+        presenter.getUsers()
 
         adapter.data = this.messages.toMutableList()
     }
@@ -211,6 +212,13 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
     private fun onSuccess(bitmap: Bitmap, file: File){
         ivAvatar.setImageBitmap(bitmap)
+
+        Glide
+            .with(this)
+            .load(bitmap)
+            .apply(RequestOptions.circleCropTransform())
+            .into(ivAvatar)
+
         presenter.uploadAvatar(file)
     }
 
@@ -223,7 +231,6 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         Glide
             .with(this)
             .load(fullPath)
-            .placeholder(R.mipmap.ic_launcher_round)
             .apply(RequestOptions.circleCropTransform())
             .into(ivAvatar)
     }

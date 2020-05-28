@@ -12,6 +12,7 @@ import javax.inject.Inject
 class UserStorage {
 
     private var user: User? = null
+    private var token: Token? = null
 
     @Inject
     constructor()
@@ -57,6 +58,17 @@ class UserStorage {
                 it.where(UserRealm::class.java).findAll().deleteAllFromRealm()
                 it.where(TokenRealm::class.java).findAll().deleteAllFromRealm()
             }
+        }
+    }
+
+    fun getToken(): Token? {
+
+        token?.let {
+            return it
+        }
+
+        Realm.getDefaultInstance().use {
+            return it.where(TokenRealm::class.java).findFirst()?.toBase().apply { token = this }
         }
     }
 }
