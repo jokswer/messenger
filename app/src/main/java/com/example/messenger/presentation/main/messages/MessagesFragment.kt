@@ -83,13 +83,13 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
         bindUserInfo(presenter.getUserInfo())
 
-        presenter.getUsers()
-
         adapter.data = this.messages.toMutableList()
 
         val list = view.findViewById<RecyclerView>(R.id.rvContactsList)
         list.layoutManager  = LinearLayoutManager(context)
         list.adapter = contactsAdapter
+
+        presenter.getUsers()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,14 +124,12 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
                     cacheFile = prepareCache()
                     val file = cacheFile
 
-                    val bitmap = BitmapFactory.decodeFile(imagePath)
-
                     if (file != null) {
 
                         val sourcePath = file.absolutePath
                         Utils.compressImage(sourcePath)
 
-                        onSuccess(bitmap, file)
+                        onSuccess(file)
                     }
                 }
             }
@@ -212,29 +210,17 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
             if (copyResult && !sourcePath.isNullOrEmpty()) {
                 Utils.compressImage(sourcePath)
-                val bitmap = BitmapFactory.decodeFile(sourcePath)
-                this.activity?.runOnUiThread { onSuccess(bitmap, cacheFile) }
+                this.activity?.runOnUiThread { onSuccess(cacheFile) }
             }
         }.start()
     }
 
-    private fun onSuccess(bitmap: Bitmap, file: File){
-        ivAvatar.setImageBitmap(bitmap)
-
-        Glide
-            .with(this)
-            .load(bitmap)
-            .apply(RequestOptions.circleCropTransform())
-            .into(ivAvatar)
-
+    private fun onSuccess(file: File){
         presenter.uploadAvatar(file)
     }
 
     override fun onSuccess(url: String?) {
-        toast("File uploaded: $url")
-
         val fullPath = "${NetModule.DOMAIN_MAIN_API}$url"
-        toast("Load image: $fullPath")
 
         Glide
             .with(this)
