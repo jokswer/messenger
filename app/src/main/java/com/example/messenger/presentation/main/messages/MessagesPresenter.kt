@@ -31,7 +31,7 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
 
     fun uploadAvatar(file: File){
 
-        userRepository.uploadAvatar(SubRX { path, e ->
+        messagesRepository.uploadAvatar(SubRX { path, e ->
             e?.let {
                 viewState.onError(it.localizedMessage)
                 it.printStackTrace()

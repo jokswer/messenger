@@ -41,11 +41,6 @@ class UserRepository {
 
     fun getUser() = storage.getUser()
 
-    fun uploadAvatar(observer: SubRX<UploadedFile>, file: File) {
-        rest.uploadAvatar(file)
-            .standardSubscribeIO(observer)
-    }
-
     fun getToken() = storage.getToken()
 
     fun refreshToken(token: Token, onRetry: (Int) -> Boolean = { it != HttpURLConnection.HTTP_UNAUTHORIZED }): Token? {
