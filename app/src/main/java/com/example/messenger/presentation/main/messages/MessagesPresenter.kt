@@ -47,8 +47,7 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
 
     fun getUsers() {
         messagesRepository.getUsers(SubRX { users, e ->
-            Log.i("Tag" ,"users1: $users")
-            users?.let { Log.i("Tag" ,"users: $users") }
+            users?.let { viewState.bindContacts(users) }
             e?.printStackTrace()
         })
     }

@@ -8,9 +8,11 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -84,6 +86,10 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         presenter.getUsers()
 
         adapter.data = this.messages.toMutableList()
+
+        val list = view.findViewById<RecyclerView>(R.id.rvContactsList)
+        list.layoutManager  = LinearLayoutManager(context)
+        list.adapter = contactsAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -151,6 +157,8 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
     private val adapter = MessagesAdapter()
     override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
+
+    private val contactsAdapter = ContactsAdapter()
 
     override fun bindUserInfo(user: User?) {
         tvName.text = user?.login
@@ -233,5 +241,9 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
             .load(fullPath)
             .apply(RequestOptions.circleCropTransform())
             .into(ivAvatar)
+    }
+
+    override fun bindContacts(users: List<User>) {
+        contactsAdapter.data = users.toMutableList()
     }
 }

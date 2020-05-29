@@ -4,14 +4,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.messenger.base.ABaseAdapter
-import com.example.messenger.domain.repositories.models.rest.Message
-import com.example.messenger.presentation.main.messages.components.IMessageView
-import com.example.messenger.presentation.main.messages.components.MessageView
+import com.example.messenger.domain.repositories.models.rest.User
+import com.example.messenger.presentation.main.messages.components.ContactView
+import com.example.messenger.presentation.main.messages.components.IContactView
 
-class MessagesAdapter: ABaseAdapter<Message, RecyclerView.ViewHolder>() {
+class ContactsAdapter: ABaseAdapter<User, RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View =
-            MessageView(
+            ContactView(
                 parent.context
             )
 
@@ -26,7 +26,7 @@ class MessagesAdapter: ABaseAdapter<Message, RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val view = holder.itemView
 
-        if (view is IMessageView) {
+        if (view is IContactView) {
             view.bind(data[position])
         }
     }
