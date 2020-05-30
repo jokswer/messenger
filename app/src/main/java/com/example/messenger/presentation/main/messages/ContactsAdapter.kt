@@ -8,7 +8,7 @@ import com.example.messenger.domain.repositories.models.rest.User
 import com.example.messenger.presentation.main.messages.components.ContactView
 import com.example.messenger.presentation.main.messages.components.IContactView
 
-class ContactsAdapter: ABaseAdapter<User, RecyclerView.ViewHolder>() {
+class ContactsAdapter(private val onContactsListener: OnContactsListener): ABaseAdapter<User, RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view: View =
             ContactView(
@@ -27,7 +27,11 @@ class ContactsAdapter: ABaseAdapter<User, RecyclerView.ViewHolder>() {
         val view = holder.itemView
 
         if (view is IContactView) {
-            view.bind(data[position])
+            view.bind(data[position], onContactsListener)
         }
     }
+}
+
+interface OnContactsListener {
+    fun onContactClick(data: User)
 }

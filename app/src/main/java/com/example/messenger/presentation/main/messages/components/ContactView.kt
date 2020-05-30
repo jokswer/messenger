@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import com.example.messenger.R
 import com.example.messenger.base.ABaseView
 import com.example.messenger.domain.repositories.models.rest.User
+import com.example.messenger.presentation.main.messages.OnContactsListener
 import kotlinx.android.synthetic.main.contact.view.*
 
 class ContactView @JvmOverloads constructor(
@@ -14,7 +15,10 @@ class ContactView @JvmOverloads constructor(
 
     override fun getViewId(): Int = R.layout.contact
 
-    override fun bind(data: User) {
+    override fun bind(data: User, OnContactsListener: OnContactsListener) {
         tvContactName.text = data.login
+        setOnClickListener {
+            OnContactsListener.onContactClick(data)
+        }
     }
 }

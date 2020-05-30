@@ -3,8 +3,6 @@ package com.example.messenger.presentation.main.messages
 import android.app.Activity
 import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -26,6 +24,7 @@ import com.example.messenger.base.Utils
 import com.example.messenger.domain.di.modules.NetModule
 import com.example.messenger.domain.repositories.models.rest.Message
 import com.example.messenger.domain.repositories.models.rest.User
+import com.example.messenger.presentation.main.IMainActivity
 import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.fragment_messages.*
 import java.io.File
@@ -35,10 +34,12 @@ import java.util.*
 import javax.inject.Inject
 
 
-class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), IMessagesView {
+class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), IMessagesView, OnContactsListener {
 
-    private val REQUEST_CODE_GALLERY = 100
-    private val REQUEST_PERMISSION = 101
+    companion object {
+        private const val REQUEST_CODE_GALLERY = 100
+        private const val REQUEST_PERMISSION = 101
+    }
 
     private var cacheFile: File? = null
     private var imagePath: String? = null
@@ -85,9 +86,7 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
         adapter.data = this.messages.toMutableList()
 
-        val list = view.findViewById<RecyclerView>(R.id.rvContactsList)
-        list.layoutManager  = LinearLayoutManager(context)
-        list.adapter = contactsAdapter
+        createContactsList(view)
 
         presenter.getUsers()
     }
@@ -156,10 +155,16 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     private val adapter = MessagesAdapter()
     override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
 
-    private val contactsAdapter = ContactsAdapter()
+    private val contactsAdapter = ContactsAdapter(this)
 
     override fun bindUserInfo(user: User?) {
         tvName.text = user?.login
+    }
+
+    private fun createContactsList(view: View){
+        val list = view.findViewById<RecyclerView>(R.id.rvContactsList)
+        list.layoutManager  = LinearLayoutManager(context)
+        list.adapter = contactsAdapter
     }
 
     override fun onError(message: String?) {
@@ -231,5 +236,12 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
     override fun bindContacts(users: List<User>) {
         contactsAdapter.data = users.toMutableList()
+    }
+
+    override fun onContactClick(data: User) {
+        Log.i("Tag", data.login)
+//        activity.let {
+//            if (it is IMainActivity) it.showDialogue()
+//        }
     }
 }
