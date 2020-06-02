@@ -240,8 +240,8 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
     override fun onContactClick(data: User) {
         Log.i("Tag", data.login)
-//        activity.let {
-//            if (it is IMainActivity) it.showDialogue()
-//        }
+        activity.let {
+            if (it is IMainActivity) it.showDialogue()
+        }
     }
 }

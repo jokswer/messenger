@@ -36,7 +36,7 @@ class MainActivity : ABaseActivity(), IMainActivity {
     }
 
     override fun showDialogue() {
-        replace(DialogueFragment(), "Dialogue")
+        replace(DialogueFragment(), "Messages")
     }
 
     override fun onBackPressed() {

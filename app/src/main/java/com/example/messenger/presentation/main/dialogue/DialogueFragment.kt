@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.messenger.App
+import com.example.messenger.R
 import com.example.messenger.base.ABaseAdapter
 import com.example.messenger.base.ABaseListFragment
 import com.example.messenger.domain.repositories.models.rest.Message
@@ -20,6 +21,8 @@ class DialogueFragment: ABaseListFragment<Message, RecyclerView.ViewHolder>(), I
     @ProvidePresenter
     fun providerPresenter() = presenter
 
+    private val adapter = ChatAdapter()
+
     override fun inject() {
         App.appComponent.inject(this)
     }
@@ -28,17 +31,11 @@ class DialogueFragment: ABaseListFragment<Message, RecyclerView.ViewHolder>(), I
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun getListId(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getListId(): Int = R.id.rvDialogueList
 
-    override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> {
-        TODO("Not yet implemented")
-    }
+    override fun provideAdapter(): ABaseAdapter<Message, RecyclerView.ViewHolder> = adapter
 
-    override fun getViewId(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getViewId(): Int = R.layout.fragment_dialogue
 
     override fun onError(message: String?) {
         TODO("Not yet implemented")
