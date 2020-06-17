@@ -45,14 +45,6 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
     private var imagePath: String? = null
     private var imageStream: InputStream? = null
 
-    private val messages = listOf(
-        Message("12.12.12", true, 1, 22, "Hello", 2),
-        Message("12.12.12", true, 1, 23, "Hello", 2),
-        Message("12.12.12", true, 1, 24, "Hello", 2),
-        Message("12.12.12", true, 1, 25, "Hello", 2),
-        Message("12.12.12", true, 1, 26, "Hello", 2)
-    )
-
     @Inject
     @InjectPresenter
     lateinit var presenter: MessagesPresenter
@@ -84,7 +76,7 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
 
         bindUserInfo(presenter.getUserInfo())
 
-        adapter.data = this.messages.toMutableList()
+        presenter.getNewMessages()
 
         createContactsList(view)
 
@@ -238,10 +230,13 @@ class MessagesFragment : ABaseListFragment<Message, RecyclerView.ViewHolder>(), 
         contactsAdapter.data = users.toMutableList()
     }
 
+    override fun bindMessages(messages: List<Message>) {
+        adapter.data = messages.toMutableList()
+    }
+
     override fun onContactClick(data: User) {
-        Log.i("Tag", data.login)
         activity.let {
-            if (it is IMainActivity) it.showDialogue()
+            if (it is IMainActivity) it.showDialogue(data)
         }
     }
 }

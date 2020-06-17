@@ -6,9 +6,9 @@ import androidx.core.view.GravityCompat
 import com.example.messenger.App
 import com.example.messenger.R
 import com.example.messenger.base.ABaseActivity
+import com.example.messenger.domain.repositories.models.rest.User
 import com.example.messenger.presentation.main.dialogue.DialogueFragment
 import com.example.messenger.presentation.main.messages.MessagesFragment
-import kotlinx.android.synthetic.main.fragment_messages.*
 
 class MainActivity : ABaseActivity(), IMainActivity {
 
@@ -35,12 +35,12 @@ class MainActivity : ABaseActivity(), IMainActivity {
         replace(MessagesFragment())
     }
 
-    override fun showDialogue() {
-        replace(DialogueFragment(), "Messages")
+    override fun showDialogue(user: User) {
+        replace(DialogueFragment(user), "Message")
     }
 
-    override fun onBackPressed() {
-        if (dlMessages.isDrawerOpen(GravityCompat.START)) dlMessages.closeDrawer(GravityCompat.START)
-        else super.onBackPressed()
-    }
+//    override fun onBackPressed() {
+//        if (dlMessages.isDrawerOpen(GravityCompat.START)) dlMessages.closeDrawer(GravityCompat.START)
+//        else super.onBackPressed()
+//    }
 }

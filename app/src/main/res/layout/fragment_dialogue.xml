@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/dialogTopBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@color/colorWhite"
@@ -24,15 +25,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6"
+        android:layout_weight="5"
         android:background="@color/colorPrimaryDark"
         android:paddingHorizontal="5dp"
         android:paddingBottom="5dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/etMessage"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
         <Button
+            android:id="@+id/btnSendMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Отправить"

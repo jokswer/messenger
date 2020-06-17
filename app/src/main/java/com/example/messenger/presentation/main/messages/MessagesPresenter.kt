@@ -50,4 +50,14 @@ class MessagesPresenter : MvpPresenter<IMessagesView> {
             e?.printStackTrace()
         })
     }
+
+    fun getNewMessages() {
+        messagesRepository.getNewMessages(SubRX { messages, e ->
+            messages?.let { viewState.bindMessages(messages) }
+            e?.let {
+                viewState.onError(it.localizedMessage)
+                return@SubRX
+            }
+        })
+    }
 }

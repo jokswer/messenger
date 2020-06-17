@@ -25,7 +25,7 @@ class ChatAdapter: ABaseAdapter<Message, RecyclerView.ViewHolder>() {
         val view = holder.itemView
 
         if (view is IChatView) {
-
+            view.bind(data[position])
         }
     }
 }

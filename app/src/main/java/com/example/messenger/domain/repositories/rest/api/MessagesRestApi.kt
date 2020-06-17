@@ -2,6 +2,7 @@ package com.example.messenger.domain.repositories.rest.api
 
 import com.example.messenger.base.ABaseRestApi
 import com.example.messenger.base.IRestClient
+import com.example.messenger.domain.repositories.models.rest.Message
 import com.example.messenger.domain.repositories.models.rest.UploadedFile
 import com.example.messenger.domain.repositories.models.rest.User
 import com.example.messenger.domain.repositories.rest.service.IMessagesRestApiService
@@ -29,5 +30,20 @@ class MessagesRestApi: ABaseRestApi<IMessagesRestApiService> {
 
         return service.uploadAvatar(part)
 
+    }
+
+    fun getNewMessages(): Observable<List<Message>> {
+        return service.getNewMessages()
+    }
+
+    fun getMessages(from: String, limit: Int, page: Int): Observable<List<Message>> {
+        return service.getMessages(from,  limit, page)
+    }
+
+    fun sendMessage(message: String, to: Int): Observable<Message> {
+        return service.sendMessage(Message(
+            message = message,
+            to = to
+        ))
     }
 }

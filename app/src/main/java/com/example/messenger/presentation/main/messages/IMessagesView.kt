@@ -7,4 +7,5 @@ import com.example.messenger.domain.repositories.models.rest.User
 interface IMessagesView: IBaseView {
     fun bindUserInfo(user: User?)
     fun bindContacts(users: List<User> )
+    fun bindMessages(messages: List<Message>)
 }
