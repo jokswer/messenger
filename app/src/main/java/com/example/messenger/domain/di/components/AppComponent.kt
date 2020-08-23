@@ -6,6 +6,7 @@ import com.example.messenger.presentation.credentials.loading.LoadingFragment
 import com.example.messenger.presentation.credentials.registration.RegistrationFragment
 import com.example.messenger.presentation.main.dialogue.DialogueFragment
 import com.example.messenger.presentation.main.messages.MessagesFragment
+import com.example.messenger.service.MessagesService
 import dagger.Component
 import javax.inject.Singleton
 
@@ -18,4 +19,5 @@ interface AppComponent {
     fun inject(target: LoadingFragment)
     fun inject(target: MessagesFragment)
     fun inject(target: DialogueFragment)
+    fun inject(target: MessagesService)
 }

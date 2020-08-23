@@ -9,6 +9,7 @@ import com.example.messenger.base.ABaseActivity
 import com.example.messenger.domain.repositories.models.rest.User
 import com.example.messenger.presentation.main.dialogue.DialogueFragment
 import com.example.messenger.presentation.main.messages.MessagesFragment
+import com.example.messenger.service.MessagesService
 
 class MainActivity : ABaseActivity(), IMainActivity {
 
@@ -25,6 +26,12 @@ class MainActivity : ABaseActivity(), IMainActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.container)
+
+        val serviceClass = MessagesService::class.java
+
+        val intent = Intent(this, serviceClass)
+
+        startService(intent)
 
         if (savedInstanceState != null) return
 
